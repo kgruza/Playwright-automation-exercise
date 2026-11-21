@@ -33,6 +33,7 @@ export default defineConfig({
     testIdAttribute: 'data-qa',
     actionTimeout: 5000,
     headless: false,
+    baseURL: 'https://automationexercise.com'
   },
 
   /* Configure projects for major browsers */

@@ -1,11 +1,9 @@
-import {test, expect} from '@playwright/test';
+import {test, expect} from '../fixtures/app.fixture';
+import { LoginPage } from '../pages/LoginPage';
 
-test('user opens a login page', async ({page}) => {
-    await page.goto("https://automationexercise.com/")
+test('user opens a login page', async ({webAppMainPage: page}) => {
 
     await expect(page).toHaveTitle('Automation Exercise');
-
-    await page.getByRole('button', {name: 'Consent'}).click();
 
     await page.getByText('Signup / Login').click();
 
@@ -14,15 +12,9 @@ test('user opens a login page', async ({page}) => {
     await expect(page.getByTestId('login-email')).toBeVisible();
 })
 
-test('user logs in with invalid credentials', async ({page}) => {
-await page.goto('https://automationexercise.com/');
-  await page.getByRole('button', { name: 'Consent' }).click();
+test('user tries to log in with invalid credentials', async ({webAppMainPage: page}) => {
   await page.getByRole('link', { name: ' Signup / Login' }).click();
-  await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').click();
-  await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').fill('asd@test.com');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('mypassword');
-  await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page.locator('#form')).toContainText('Your email or password is incorrect!');
-
+  const loginPage = new LoginPage(page);
+  await loginPage.enterCredentialsAndClickLogin('incorrectEmail1231421@someDomain.com', 'incorrectPassword123');
+  await loginPage.incorrectLoginCredentialsErrorMessageIsVisible();
 })
